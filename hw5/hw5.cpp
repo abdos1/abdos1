@@ -1,116 +1,44 @@
-/*
- * C Program for Depth First Binary Tree Search using Recursion
- */
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
 
-struct node
-{
-    int a;
-    struct node *left;
-    struct node *right;
+using namespace std;
+
+struct Node {
+	int value;
+	Node *left;
+	Node *right;
+
+	Node(int val) {
+		this->value = val;
+	}
+
+	Node(int val, Node *left, Node *right) {
+		this->value = val;
+		this->left = left;
+		this->right = right;
+	}
 };
 
-void generate(struct node **, int);
-void DFS(struct node *);
-void deletion(struct node **);
+void DFS_PreOrder_traversal_recursive(const Node *entry) {
+  if (entry == nullptr) return;
 
-int main()
-{
-    struct node *head = NULL;
-    int choice = 0, num, flag = 0, key;
-
-    do
-    {
-        printf("\nEnter your choice:\n1. Insert\n2. Perform DFS Traversal\n3. Exit\nChoice: ");
-        scanf("%d", &choice);
-        switch(choice)
-        {
-        case 1:
-            printf("Enter element to insert: ");
-            scanf("%d", &num);
-            generate(&head, num);
-            break;
-        case 2:
-            DFS(head);
-            break;
-        case 3:
-            delete(&head);
-            printf("Memory Cleared\nPROGRAM TERMINATED\n");
-            break;
-        default:
-            printf("Not a valid input, try again\n");
-        }
-    } while (choice != 3);
-    return 0;
+  cout << entry->value << " ";
+  
+  DFS_PreOrder_traversal_recursive(entry->left);
+  DFS_PreOrder_traversal_recursive(entry->right);
 }
 
-void generate(struct node **head, int num)
-{
-    struct node *temp = *head, *prev = *head;
+Node *generateBinaryTree() {
+	Node *root = new Node(2);
 
-    if (*head == NULL)
-    {
-        *head = (struct node *)malloc(sizeof(struct node));
-        (*head)->a = num;
-        (*head)->left = (*head)->right = NULL;
-    }
-    else
-    {
-        while (temp != NULL)
-        {
-            if (num > temp->a)
-            {
-                prev = temp;
-                temp = temp->right;
-            }
-            else
-            {
-                prev = temp;
-                temp = temp->left;
-            }
-        }
-        temp = (struct node *)malloc(sizeof(struct node));
-        temp->a = num;
-        if (num >= prev->a)
-        {
-            prev->right = temp;
-        }
-        else
-        {
-            prev->left = temp;
-        }
-    }
+	root->right = new Node(5, nullptr, new Node(9,  new Node(4), nullptr));
+	root->left = new Node(7, new Node(2), new Node(6, new Node(5), new Node(11)));
+
+	return root;
 }
 
-void DFS(struct node *head)
-{
-    if (head)
-    {
-        if (head->left)
-        {
-            DFS(head->left);
-        }
-        if (head->right)
-        {
-            DFS(head->right);
-        }
-        printf("%d  ", head->a);
-    }
-}
-
-void deletion(struct node **head)
-{
-    if (*head != NULL)
-    {
-        if ((*head)->left)
-        {
-            delete(&(*head)->left);
-        }
-        if ((*head)->right)
-        {
-            delete(&(*head)->right);
-        }
-        free(*head);
-    }
+int main() {
+  Node *root = generateBinaryTree();
+  cout << "These are the steps in my tree: ";
+  DFS_PreOrder_traversal_recursive(root);
+  cout << endl;
 }
